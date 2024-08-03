@@ -23,7 +23,7 @@ using namespace ns3;
 
 int main(int argc, char* argv[])
 {
-    bool udp = true;
+    bool udp = false;
     bool yans = false;
     double distance = 1.0;
     double simulationTime = 20.0; // seconds
@@ -213,7 +213,7 @@ int main(int argc, char* argv[])
 
     UdpClientHelper p2pClient(p2pInterfaces.GetAddress(1), p2pPort); // Client on sta1
     p2pClient.SetAttribute("MaxPackets", UintegerValue(1000));
-    p2pClient.SetAttribute("Interval", TimeValue(Time("0.1"))); // 10ms interval
+    p2pClient.SetAttribute("Interval", TimeValue(Time("0.000001")));
     p2pClient.SetAttribute("PacketSize", UintegerValue(1024));
 
     ApplicationContainer p2pClientApp = p2pClient.Install(wifiStaNode1.Get(0));
@@ -259,7 +259,7 @@ int main(int argc, char* argv[])
     {
         std::cout << "Using TCP" << std::endl;
         uint16_t port1 = 50000;
-        uint16_t port2 = 50001;
+        uint16_t port2 = 50000;
 
         Address apLocalAddress1(InetSocketAddress(Ipv4Address::GetAny(), port1));
         PacketSinkHelper packetSinkHelper1("ns3::TcpSocketFactory", apLocalAddress1);
