@@ -23,7 +23,7 @@ using namespace ns3;
 
 int main(int argc, char* argv[])
 {
-    bool udp = false;
+    bool udp = true;
     bool yans = false;
     double distance = 1.0;
     double simulationTime = 20.0; // seconds
@@ -64,11 +64,6 @@ int main(int argc, char* argv[])
 
     NetDeviceContainer staDevice1, staDevice2, apDevice1, apDevice2;
 
-    /*Point-2-Point Coonection START*/
-
-
-    /*Point-2-Point Coonection END*/
-
     WifiHelper wifi1, wifi2;
     wifi1.SetStandard(WIFI_STANDARD_80211n);
     wifi2.SetStandard(WIFI_STANDARD_80211n);
@@ -80,47 +75,47 @@ int main(int argc, char* argv[])
     if(!yans)
     {
         std::cout << "Using Spectrum Channel" << std::endl;
-        SpectrumWifiPhyHelper spectrumPhy1, spectrumPhy2;
+    SpectrumWifiPhyHelper spectrumPhy1, spectrumPhy2;
 
-        Ptr<MultiModelSpectrumChannel> spectrumChannel1 = CreateObject<MultiModelSpectrumChannel>();
-        Ptr<MultiModelSpectrumChannel> spectrumChannel2 = CreateObject<MultiModelSpectrumChannel>();
+    Ptr<MultiModelSpectrumChannel> spectrumChannel1 = CreateObject<MultiModelSpectrumChannel>();
+    Ptr<MultiModelSpectrumChannel> spectrumChannel2 = CreateObject<MultiModelSpectrumChannel>();
 
-        Ptr<FriisPropagationLossModel> lossModel1 = CreateObject<FriisPropagationLossModel>();
-        lossModel1->SetFrequency(5180e6);
-        spectrumChannel1->AddPropagationLossModel(lossModel1);
+    Ptr<FriisPropagationLossModel> lossModel1 = CreateObject<FriisPropagationLossModel>();
+    lossModel1->SetFrequency(2401);
+    spectrumChannel1->AddPropagationLossModel(lossModel1);
 
-        Ptr<ConstantSpeedPropagationDelayModel> delayModel1 = CreateObject<ConstantSpeedPropagationDelayModel>();
-        spectrumChannel1->SetPropagationDelayModel(delayModel1);
+    Ptr<ConstantSpeedPropagationDelayModel> delayModel1 = CreateObject<ConstantSpeedPropagationDelayModel>();
+    spectrumChannel1->SetPropagationDelayModel(delayModel1);
 
-        spectrumPhy1.SetChannel(spectrumChannel1);
-        spectrumPhy1.SetErrorRateModel(errorModelType);
-        spectrumPhy1.Set("ChannelSettings", StringValue("{36, 0, BAND_5GHZ, 0}"));
+    spectrumPhy1.SetChannel(spectrumChannel1);
+    spectrumPhy1.SetErrorRateModel(errorModelType);
+    spectrumPhy1.Set("ChannelSettings", StringValue("{1, 0, BAND_2_4GHZ, 0}"));
 
-        Ptr<FriisPropagationLossModel> lossModel2 = CreateObject<FriisPropagationLossModel>();
-        lossModel2->SetFrequency(5190e6);
-        spectrumChannel2->AddPropagationLossModel(lossModel2);
+    Ptr<FriisPropagationLossModel> lossModel2 = CreateObject<FriisPropagationLossModel>();
+    lossModel2->SetFrequency(2406);
+    spectrumChannel2->AddPropagationLossModel(lossModel2);
 
-        Ptr<ConstantSpeedPropagationDelayModel> delayModel2 = CreateObject<ConstantSpeedPropagationDelayModel>();
-        spectrumChannel2->SetPropagationDelayModel(delayModel2);
+    Ptr<ConstantSpeedPropagationDelayModel> delayModel2 = CreateObject<ConstantSpeedPropagationDelayModel>();
+    spectrumChannel2->SetPropagationDelayModel(delayModel2);
 
-        spectrumPhy2.SetChannel(spectrumChannel2);
-        spectrumPhy2.SetErrorRateModel(errorModelType);
-        spectrumPhy2.Set("ChannelSettings", StringValue("{38, 0, BAND_5GHZ, 0}"));
+    spectrumPhy2.SetChannel(spectrumChannel2);
+    spectrumPhy2.SetErrorRateModel(errorModelType);
+    spectrumPhy2.Set("ChannelSettings", StringValue("{2, 0, BAND_2_4GHZ, 0}"));
 
-        wifi1.SetRemoteStationManager("ns3::ConstantRateWifiManager", "DataMode", StringValue("HtMcs4"), "ControlMode", StringValue("HtMcs4"));
-        wifi2.SetRemoteStationManager("ns3::ConstantRateWifiManager", "DataMode", StringValue("HtMcs4"), "ControlMode", StringValue("HtMcs4"));
+    wifi1.SetRemoteStationManager("ns3::ConstantRateWifiManager", "DataMode", StringValue("HtMcs4"), "ControlMode", StringValue("HtMcs4"));
+    wifi2.SetRemoteStationManager("ns3::ConstantRateWifiManager", "DataMode", StringValue("HtMcs4"), "ControlMode", StringValue("HtMcs4"));
 
-        mac1.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssid1));
-        mac2.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssid2));
+    mac1.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssid1));
+    mac2.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssid2));
 
-        staDevice1 = wifi1.Install(spectrumPhy1, mac1, wifiStaNode1);
-        staDevice2 = wifi2.Install(spectrumPhy2, mac2, wifiStaNode2);
+    staDevice1 = wifi1.Install(spectrumPhy1, mac1, wifiStaNode1);
+    staDevice2 = wifi2.Install(spectrumPhy2, mac2, wifiStaNode2);
 
-        mac1.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssid1));
-        mac2.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssid2));
+    mac1.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssid1));
+    mac2.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssid2));
 
-        apDevice1 = wifi1.Install(spectrumPhy1, mac1, wifiApNode1);
-        apDevice2 = wifi2.Install(spectrumPhy2, mac2, wifiApNode2);
+    apDevice1 = wifi1.Install(spectrumPhy1, mac1, wifiApNode1);
+    apDevice2 = wifi2.Install(spectrumPhy2, mac2, wifiApNode2);
     }else{
         std::cout << "Using Yans Channel" << std::endl;
         YansWifiChannelHelper channelHelper = YansWifiChannelHelper::Default();
@@ -152,8 +147,8 @@ int main(int argc, char* argv[])
     positionAlloc1->Add(Vector(0.0, 0.0, 0.0));
     positionAlloc1->Add(Vector(distance, 0.0, 0.0));
 
-    positionAlloc2->Add(Vector(0.0, 5.0, 0.0));
-    positionAlloc2->Add(Vector(distance, 5.0, 0.0));
+    positionAlloc2->Add(Vector(0.0, 1.0, 0.0));
+    positionAlloc2->Add(Vector(distance, 1.0, 0.0));
 
     mobility1.SetPositionAllocator(positionAlloc1);
     mobility1.SetMobilityModel("ns3::ConstantPositionMobilityModel");
@@ -244,12 +239,12 @@ int main(int argc, char* argv[])
 
         UdpClientHelper client1(staInterface1.GetAddress(0), port1);
         client1.SetAttribute("MaxPackets", UintegerValue(54541));
-        client1.SetAttribute("Interval", TimeValue(Time("0.001")));
+        client1.SetAttribute("Interval", TimeValue(Time("0.0001")));
         client1.SetAttribute("PacketSize", UintegerValue(payloadSize));
 
         UdpClientHelper client2(staInterface2.GetAddress(0), port2);
         client2.SetAttribute("MaxPackets", UintegerValue(54541));
-        client2.SetAttribute("Interval", TimeValue(Time("0.001")));
+        client2.SetAttribute("Interval", TimeValue(Time("0.0001")));
         client2.SetAttribute("PacketSize", UintegerValue(payloadSize));
 
         ApplicationContainer clientApp1 = client1.Install(wifiApNode1.Get(0));
