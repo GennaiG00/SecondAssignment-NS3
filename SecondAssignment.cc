@@ -24,7 +24,7 @@ using namespace ns3;
 int main(int argc, char* argv[])
 {
         bool udp = true;
-        bool yans = false;
+        bool yans = true;
         double distance = 1.0;
         double simulationTime = 20.0; // seconds
         std::string wifiType = "ns3::SpectrumWifiPhy";
@@ -71,14 +71,12 @@ int main(int argc, char* argv[])
         Ssid ssid1 = Ssid("ns380211n");
         Ssid ssid2 = Ssid("ns380211n_2");
 
-
         if(!yans)
         {
             std::cout << "Using Spectrum Channel" << std::endl;
             SpectrumWifiPhyHelper spectrumPhy1, spectrumPhy2;
 
             Ptr<MultiModelSpectrumChannel> spectrumChannel1 = CreateObject<MultiModelSpectrumChannel>();
-            Ptr<MultiModelSpectrumChannel> spectrumChannel2 = CreateObject<MultiModelSpectrumChannel>();
 
             Ptr<FriisPropagationLossModel> lossModel1 = CreateObject<FriisPropagationLossModel>();
             lossModel1->SetFrequency(2401);
@@ -91,14 +89,7 @@ int main(int argc, char* argv[])
             spectrumPhy1.SetErrorRateModel(errorModelType);
             spectrumPhy1.Set("ChannelSettings", StringValue("{1, 0, BAND_2_4GHZ, 0}"));
 
-            Ptr<FriisPropagationLossModel> lossModel2 = CreateObject<FriisPropagationLossModel>();
-            lossModel2->SetFrequency(2406);
-            spectrumChannel2->AddPropagationLossModel(lossModel2);
-
-            Ptr<ConstantSpeedPropagationDelayModel> delayModel2 = CreateObject<ConstantSpeedPropagationDelayModel>();
-            spectrumChannel2->SetPropagationDelayModel(delayModel2);
-
-            spectrumPhy2.SetChannel(spectrumChannel2);
+            spectrumPhy2.SetChannel(spectrumChannel1);
             spectrumPhy2.SetErrorRateModel(errorModelType);
             spectrumPhy2.Set("ChannelSettings", StringValue("{2, 0, BAND_2_4GHZ, 0}"));
 
